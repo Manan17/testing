@@ -1,4 +1,6 @@
 kernel_name,kernel_provider,kernel_operation_mode,metric_name,metric_unit,x_name,x_label,x_value,y_value_50,y_value_20,y_value_80,extra_benchmark_config_str,gpu_name,timestamp,liger_version
+cross_entropy,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+cross_entropy,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 cross_entropy,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 cross_entropy,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 cross_entropy,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -39,6 +41,8 @@ cross_entropy,huggingface,full,memory,MB,V,vocab size,16384,5120.1259765625,5120
 cross_entropy,huggingface,full,memory,MB,V,vocab size,32768,10240.1259765625,10240.1259765625,10240.1259765625,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-03 15:31:42,0.2.1
 cross_entropy,huggingface,full,memory,MB,V,vocab size,65536,20480.125,20480.125,20480.125,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-03 15:31:42,0.2.1
 cross_entropy,huggingface,full,memory,MB,V,vocab size,131072,40960.125,40960.125,40960.125,"{""B"": 8, ""T"": 2048}",NVIDIA A100-SXM4-80GB,2024-09-03 15:31:42,0.2.1
+embedding,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+embedding,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 embedding,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 embedding,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 embedding,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -187,6 +191,8 @@ embedding,torch_compile,full,memory,MB,V,embedding dimension,16384,1536.125,1536
 embedding,torch_compile,full,memory,MB,V,embedding dimension,32768,3072.125,3072.125,3072.125,"{""B"": 8, ""T"": 2048, ""D"": 4096, ""dtype"": ""torch.float32""}",NVIDIA A100-SXM4-80GB,2024-09-03 15:34:31,0.2.1
 embedding,torch_compile,full,memory,MB,V,embedding dimension,65536,6144.125,6144.125,6144.125,"{""B"": 8, ""T"": 2048, ""D"": 4096, ""dtype"": ""torch.float32""}",NVIDIA A100-SXM4-80GB,2024-09-03 15:34:31,0.2.1
 embedding,torch_compile,full,memory,MB,V,embedding dimension,131072,12288.125,12288.125,12288.125,"{""B"": 8, ""T"": 2048, ""D"": 4096, ""dtype"": ""torch.float32""}",NVIDIA A100-SXM4-80GB,2024-09-03 15:34:31,0.2.1
+fused_linear_cross_entropy,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+fused_linear_cross_entropy,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 fused_linear_cross_entropy,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 fused_linear_cross_entropy,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 fused_linear_cross_entropy,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -215,6 +221,8 @@ fused_linear_cross_entropy,huggingface,full,memory,MB,BT,B x T,4096,6092.2822265
 fused_linear_cross_entropy,huggingface,full,memory,MB,BT,B x T,8192,9162.3134765625,9162.3134765625,9162.3134765625,"{""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16""}",NVIDIA A100-SXM4-80GB,2024-11-22 17:46:53,0.4.2
 fused_linear_cross_entropy,huggingface,full,memory,MB,BT,B x T,16384,15302.3759765625,15302.3759765625,15302.3759765625,"{""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16""}",NVIDIA A100-SXM4-80GB,2024-11-22 17:46:53,0.4.2
 fused_linear_cross_entropy,huggingface,full,memory,MB,BT,B x T,32768,27582.5,27582.5,27582.5,"{""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16""}",NVIDIA A100-SXM4-80GB,2024-11-22 17:46:53,0.4.2
+geglu,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+geglu,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 geglu,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 geglu,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 geglu,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -267,6 +275,8 @@ geglu,huggingface,backward,memory,MB,T,sequence length,1024,1992.25,1992.25,1992
 geglu,huggingface,backward,memory,MB,T,sequence length,2048,3452.25,3452.25,3452.25,"{""bsz"": 8, ""hidden_size"": 4096, ""intermediate_size"": 11008, ""hidden_act"": ""gelu_pytorch_tanh"", ""dtype"": ""torch.bfloat16""}",NVIDIA A100-SXM4-80GB,2024-09-03 15:39:06,0.2.1
 geglu,huggingface,backward,memory,MB,T,sequence length,4096,6372.25,6372.25,6372.25,"{""bsz"": 8, ""hidden_size"": 4096, ""intermediate_size"": 11008, ""hidden_act"": ""gelu_pytorch_tanh"", ""dtype"": ""torch.bfloat16""}",NVIDIA A100-SXM4-80GB,2024-09-03 15:39:06,0.2.1
 geglu,huggingface,backward,memory,MB,T,sequence length,8192,12212.25,12212.25,12212.25,"{""bsz"": 8, ""hidden_size"": 4096, ""intermediate_size"": 11008, ""hidden_act"": ""gelu_pytorch_tanh"", ""dtype"": ""torch.bfloat16""}",NVIDIA A100-SXM4-80GB,2024-09-03 15:39:06,0.2.1
+layer_norm,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+layer_norm,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 layer_norm,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 layer_norm,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 layer_norm,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -301,6 +311,8 @@ layer_norm,huggingface,full,memory,MB,N,hidden size,2048,160.09375,160.09375,160
 layer_norm,huggingface,full,memory,MB,N,hidden size,4096,320.15625,320.15625,320.15625,"{""M"": 4096, ""dtype"": ""torch.float32"", ""eps"": 1e-06}",NVIDIA A100-SXM4-80GB,2024-09-03 15:39:21,0.2.1
 layer_norm,huggingface,full,memory,MB,N,hidden size,8192,640.28125,640.28125,640.28125,"{""M"": 4096, ""dtype"": ""torch.float32"", ""eps"": 1e-06}",NVIDIA A100-SXM4-80GB,2024-09-03 15:39:21,0.2.1
 layer_norm,huggingface,full,memory,MB,N,hidden size,16384,1280.53125,1280.53125,1280.53125,"{""M"": 4096, ""dtype"": ""torch.float32"", ""eps"": 1e-06}",NVIDIA A100-SXM4-80GB,2024-09-03 15:39:21,0.2.1
+rms_norm,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+rms_norm,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 rms_norm,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 rms_norm,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 rms_norm,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -353,6 +365,8 @@ rms_norm,huggingface,full,memory,MB,H,hidden size,4096,320.0546875,320.0546875,3
 rms_norm,huggingface,full,memory,MB,H,hidden size,8192,640.1015625,640.1015625,640.1015625,"{""M"": 2048, ""dtype"": ""torch.bfloat16"", ""eps"": 1e-06}",NVIDIA A100-SXM4-80GB,2024-09-03 15:39:46,0.2.1
 rms_norm,huggingface,full,memory,MB,H,hidden size,16384,1280.1953125,1280.1953125,1280.1953125,"{""M"": 2048, ""dtype"": ""torch.bfloat16"", ""eps"": 1e-06}",NVIDIA A100-SXM4-80GB,2024-09-03 15:39:46,0.2.1
 rms_norm,huggingface,full,memory,MB,H,hidden size,32768,2560.3828125,2560.3828125,2560.3828125,"{""M"": 2048, ""dtype"": ""torch.bfloat16"", ""eps"": 1e-06}",NVIDIA A100-SXM4-80GB,2024-09-03 15:39:46,0.2.1
+rope,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+rope,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 rope,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 rope,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 rope,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -421,6 +435,8 @@ rope,huggingface,full,memory,MB,T,sequence length,2048,234.14111328125,234.14111
 rope,huggingface,full,memory,MB,T,sequence length,4096,460.15673828125,460.15673828125,460.15673828125,"{""dtype"": ""torch.bfloat16"", ""hidden_size"": 8192, ""num_q_heads"": 32, ""num_kv_heads"": 8}",NVIDIA A100-SXM4-80GB,2024-09-03 15:40:15,0.2.1
 rope,huggingface,full,memory,MB,T,sequence length,8192,912.18798828125,912.18798828125,912.18798828125,"{""dtype"": ""torch.bfloat16"", ""hidden_size"": 8192, ""num_q_heads"": 32, ""num_kv_heads"": 8}",NVIDIA A100-SXM4-80GB,2024-09-03 15:40:15,0.2.1
 rope,huggingface,full,memory,MB,T,sequence length,16384,1816.25048828125,1816.25048828125,1816.25048828125,"{""dtype"": ""torch.bfloat16"", ""hidden_size"": 8192, ""num_q_heads"": 32, ""num_kv_heads"": 8}",NVIDIA A100-SXM4-80GB,2024-09-03 15:40:15,0.2.1
+swiglu,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+swiglu,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 swiglu,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 swiglu,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 swiglu,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -441,6 +457,8 @@ swiglu,huggingface,full,memory,MB,T,sequence length,1024,1294.25,1294.25,1294.25
 swiglu,huggingface,full,memory,MB,T,sequence length,2048,1992.25,1992.25,1992.25,"{""B"": 4, ""hidden_size"": 4096, ""dtype"": ""torch.bfloat16"", ""intermediate_size"": 11008, ""hidden_act"": ""silu""}",NVIDIA A100-SXM4-80GB,2024-09-03 15:40:36,0.2.1
 swiglu,huggingface,full,memory,MB,T,sequence length,4096,3452.25,3452.25,3452.25,"{""B"": 4, ""hidden_size"": 4096, ""dtype"": ""torch.bfloat16"", ""intermediate_size"": 11008, ""hidden_act"": ""silu""}",NVIDIA A100-SXM4-80GB,2024-09-03 15:40:36,0.2.1
 swiglu,huggingface,full,memory,MB,T,sequence length,8192,6372.25,6372.25,6372.25,"{""B"": 4, ""hidden_size"": 4096, ""dtype"": ""torch.bfloat16"", ""intermediate_size"": 11008, ""hidden_act"": ""silu""}",NVIDIA A100-SXM4-80GB,2024-09-03 15:40:36,0.2.1
+kl_div,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+kl_div,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 kl_div,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 kl_div,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 kl_div,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -481,6 +499,8 @@ kl_div,torch,full,speed,ms,V,vocab size,16384,11.124671936035156,11.122162818908
 kl_div,torch,full,speed,ms,V,vocab size,32768,23.052032470703125,23.05033493041992,23.052589416503903,"{""B"": 8, ""T"": 2048}",NVIDIA H100 PCIe,2024-09-04 12:59:48,0.2.1
 kl_div,torch,full,speed,ms,V,vocab size,65536,46.06316757202149,46.05990219116211,46.06643295288086,"{""B"": 8, ""T"": 2048}",NVIDIA H100 PCIe,2024-09-04 12:59:48,0.2.1
 kl_div,torch,full,speed,ms,V,vocab size,131072,92.06393432617188,92.06393432617188,92.06393432617188,"{""B"": 8, ""T"": 2048}",NVIDIA H100 PCIe,2024-09-04 12:59:48,0.2.1
+jsd,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+jsd,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 jsd,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 jsd,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 jsd,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -521,6 +541,8 @@ jsd,torch,full,speed,ms,V,vocab size,16384,20.9442081451416,20.94247055053711,20
 jsd,torch,full,speed,ms,V,vocab size,32768,42.11321640014648,42.11321640014648,42.11321640014648,"{""B"": 4, ""T"": 2048}",NVIDIA H100 PCIe,2024-10-02 16:21:43,0.3.1
 jsd,torch,full,speed,ms,V,vocab size,65536,83.9959716796875,83.9959716796875,83.9959716796875,"{""B"": 4, ""T"": 2048}",NVIDIA H100 PCIe,2024-10-02 16:21:43,0.3.1
 jsd,torch,full,speed,ms,V,vocab size,131072,167.94175720214844,167.94175720214844,167.94175720214844,"{""B"": 4, ""T"": 2048}",NVIDIA H100 PCIe,2024-10-02 16:21:43,0.3.1
+fused_linear_jsd,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+fused_linear_jsd,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 fused_linear_jsd,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 fused_linear_jsd,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 fused_linear_jsd,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -549,6 +571,8 @@ fused_linear_jsd,torch,full,memory,MB,BT,B x T,1024,10609.005859375,10609.005859
 fused_linear_jsd,torch,full,memory,MB,BT,B x T,2048,17146.009765625,17146.009765625,17146.009765625,"{""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16""}",NVIDIA H100 80GB HBM3,2024-10-09 12:29:35,0.3.1
 fused_linear_jsd,torch,full,memory,MB,BT,B x T,4096,30220.017578125,30220.017578125,30220.017578125,"{""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16""}",NVIDIA H100 80GB HBM3,2024-10-09 12:29:35,0.3.1
 fused_linear_jsd,torch,full,memory,MB,BT,B x T,8192,56368.015625,56368.015625,56368.015625,"{""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16""}",NVIDIA H100 80GB HBM3,2024-10-09 12:29:35,0.3.1
+tvd,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+tvd,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 tvd,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 tvd,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 tvd,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -589,6 +613,8 @@ tvd,torch,full,speed,ms,V,vocab size,16384,15.841055870056152,15.837087631225586
 tvd,torch,full,speed,ms,V,vocab size,32768,31.71219253540039,31.706951141357425,31.715898513793945,"{""B"": 8, ""T"": 2048}",NVIDIA H100 PCIe,2024-10-26 01:17:13,0.3.1
 tvd,torch,full,speed,ms,V,vocab size,65536,63.17919921875,63.17919921875,63.17919921875,"{""B"": 8, ""T"": 2048}",NVIDIA H100 PCIe,2024-10-26 01:17:13,0.3.1
 tvd,torch,full,speed,ms,V,vocab size,131072,126.0436782836914,126.0436782836914,126.0436782836914,"{""B"": 8, ""T"": 2048}",NVIDIA H100 PCIe,2024-10-26 01:17:13,0.3.1
+group_norm,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+group_norm,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 group_norm,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 group_norm,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 group_norm,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -707,6 +733,8 @@ layer_norm,huggingface,full,memory,MB,N,hidden size,2048,160.09375,160.09375,160
 layer_norm,huggingface,full,memory,MB,N,hidden size,4096,320.15625,320.15625,320.15625,"{""M"": 4096, ""dtype"": ""torch.float32"", ""eps"": 1e-06}",NVIDIA A100-SXM4-40GB,2024-11-05 19:28:05,0.3.1
 layer_norm,huggingface,full,memory,MB,N,hidden size,8192,640.28125,640.28125,640.28125,"{""M"": 4096, ""dtype"": ""torch.float32"", ""eps"": 1e-06}",NVIDIA A100-SXM4-40GB,2024-11-05 19:28:05,0.3.1
 layer_norm,huggingface,full,memory,MB,N,hidden size,16384,1280.53125,1280.53125,1280.53125,"{""M"": 4096, ""dtype"": ""torch.float32"", ""eps"": 1e-06}",NVIDIA A100-SXM4-40GB,2024-11-05 19:28:05,0.3.1
+fused_linear_orpo_loss,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+fused_linear_orpo_loss,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 fused_linear_orpo_loss,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 fused_linear_orpo_loss,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 fused_linear_orpo_loss,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -759,6 +787,8 @@ fused_linear_orpo_loss,huggingface,full,memory,MB,B,B,2,8645.314453125,8645.3144
 fused_linear_orpo_loss,huggingface,full,memory,MB,B,B,4,12184.330078125,12184.330078125,12184.330078125,"{""T"": 1024, ""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16""}",NVIDIA A100-SXM4-80GB,2024-11-13 22:08:56,0.4.0
 fused_linear_orpo_loss,huggingface,full,memory,MB,B,B,8,19262.361328125,19262.361328125,19262.361328125,"{""T"": 1024, ""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16""}",NVIDIA A100-SXM4-80GB,2024-11-13 22:08:56,0.4.0
 fused_linear_orpo_loss,huggingface,full,memory,MB,B,B,16,33418.421875,33418.421875,33418.421875,"{""T"": 1024, ""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16""}",NVIDIA A100-SXM4-80GB,2024-11-13 22:08:56,0.4.0
+fused_linear_cpo_loss,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+fused_linear_cpo_loss,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 fused_linear_cpo_loss,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 fused_linear_cpo_loss,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 fused_linear_cpo_loss,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -787,6 +817,8 @@ fused_linear_cpo_loss,huggingface,full,memory,MB,B,B,2,8645.314453125,8645.31445
 fused_linear_cpo_loss,huggingface,full,memory,MB,B,B,4,12184.330078125,12184.330078125,12184.330078125,"{""T"": 1024, ""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16""}",NVIDIA A100-SXM4-80GB,2024-11-14 16:57:37,0.4.1
 fused_linear_cpo_loss,huggingface,full,memory,MB,B,B,8,19262.361328125,19262.361328125,19262.361328125,"{""T"": 1024, ""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16""}",NVIDIA A100-SXM4-80GB,2024-11-14 16:57:37,0.4.1
 fused_linear_cpo_loss,huggingface,full,memory,MB,B,B,16,33418.42578125,33418.42578125,33418.42578125,"{""T"": 1024, ""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16""}",NVIDIA A100-SXM4-80GB,2024-11-14 16:57:37,0.4.1
+fused_linear_simpo_loss,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+fused_linear_simpo_loss,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 fused_linear_simpo_loss,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 fused_linear_simpo_loss,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 fused_linear_simpo_loss,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -815,6 +847,8 @@ fused_linear_simpo_loss,huggingface,full,memory,MB,B,B,2,8645.314453125,8645.314
 fused_linear_simpo_loss,huggingface,full,memory,MB,B,B,4,12184.330078125,12184.330078125,12184.330078125,"{""T"": 1024, ""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16""}",NVIDIA A100-SXM4-80GB,2024-11-15 14:30:01,0.4.1
 fused_linear_simpo_loss,huggingface,full,memory,MB,B,B,8,19262.361328125,19262.361328125,19262.361328125,"{""T"": 1024, ""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16""}",NVIDIA A100-SXM4-80GB,2024-11-15 14:30:01,0.4.1
 fused_linear_simpo_loss,huggingface,full,memory,MB,B,B,16,33418.42578125,33418.42578125,33418.42578125,"{""T"": 1024, ""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16""}",NVIDIA A100-SXM4-80GB,2024-11-15 14:30:01,0.4.1
+distill_jsd_loss,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+distill_jsd_loss,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 distill_jsd_loss,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 distill_jsd_loss,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 distill_jsd_loss,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -843,6 +877,8 @@ distill_jsd_loss,torch,full,memory,MB,BT,B x T,1024,16174.0390625,16174.0390625,
 distill_jsd_loss,torch,full,memory,MB,BT,B x T,2048,23713.05078125,23713.05078125,23713.05078125,"{""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16"", ""bias"": false, ""weight_hard_loss"": 0.5, ""weight_soft_loss"": 0.5, ""ignore_index"": -100}",NVIDIA H100 80GB HBM3,2024-12-03 08:01:32,0.4.2
 distill_jsd_loss,torch,full,memory,MB,BT,B x T,4096,38791.07421875,38791.07421875,38791.07421875,"{""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16"", ""bias"": false, ""weight_hard_loss"": 0.5, ""weight_soft_loss"": 0.5, ""ignore_index"": -100}",NVIDIA H100 80GB HBM3,2024-12-03 08:01:32,0.4.2
 distill_jsd_loss,torch,full,memory,MB,BT,B x T,8192,68947.1015625,68947.1015625,68947.1015625,"{""H"": 4096, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16"", ""bias"": false, ""weight_hard_loss"": 0.5, ""weight_soft_loss"": 0.5, ""ignore_index"": -100}",NVIDIA H100 80GB HBM3,2024-12-03 08:01:32,0.4.2
+kto_loss,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+kto_loss,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 kto_loss,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 kto_loss,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 kto_loss,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -877,6 +913,8 @@ kto_loss,huggingface,full,memory,MB,B,Batch Size (B),4,6099.26513671875,6099.265
 kto_loss,huggingface,full,memory,MB,B,Batch Size (B),8,9613.298828125,9613.298828125,9613.298828125,"{""T"": 512, ""H"": 1024, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16"", ""bias"": true, ""beta"": 0.1, ""ignore_index"": 42}",NVIDIA H100 80GB HBM3,2025-03-03 08:24:11,0.5.4
 kto_loss,huggingface,full,memory,MB,B,Batch Size (B),16,16643.365234375,16643.365234375,16643.365234375,"{""T"": 512, ""H"": 1024, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16"", ""bias"": true, ""beta"": 0.1, ""ignore_index"": 42}",NVIDIA H100 80GB HBM3,2025-03-03 08:24:11,0.5.4
 kto_loss,huggingface,full,memory,MB,B,Batch Size (B),32,30703.498046875,30703.498046875,30703.498046875,"{""T"": 512, ""H"": 1024, ""V"": 128256, ""mode"": ""forward"", ""dtype"": ""torch.bfloat16"", ""bias"": true, ""beta"": 0.1, ""ignore_index"": 42}",NVIDIA H100 80GB HBM3,2025-03-03 08:24:11,0.5.4
+sparsemax,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+sparsemax,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 sparsemax,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 sparsemax,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 sparsemax,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -929,6 +967,8 @@ sparsemax,torch,full,memory,MB,V,feature size,4096,328.046875,328.046875,328.046
 sparsemax,torch,full,memory,MB,V,feature size,8192,704.00048828125,704.00048828125,704.00048828125,"{""B"": 4, ""T"": 512, ""dim"": -1, ""dtype"": ""torch.float32""}",NVIDIA GeForce RTX 3090,2025-04-28 00:38:26,0.5.8
 sparsemax,torch,full,memory,MB,V,feature size,16384,1408.00048828125,1408.00048828125,1408.00048828125,"{""B"": 4, ""T"": 512, ""dim"": -1, ""dtype"": ""torch.float32""}",NVIDIA GeForce RTX 3090,2025-04-28 00:38:26,0.5.8
 sparsemax,torch,full,memory,MB,V,feature size,32768,2816.00048828125,2816.00048828125,2816.00048828125,"{""B"": 4, ""T"": 512, ""dim"": -1, ""dtype"": ""torch.float32""}",NVIDIA GeForce RTX 3090,2025-04-28 00:38:26,0.5.8
+multi_token_attention,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+multi_token_attention,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 multi_token_attention,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 multi_token_attention,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 multi_token_attention,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -981,6 +1021,8 @@ multi_token_attention,torch,full,memory,MB,L,sequence length,128,3.4736328125,3.
 multi_token_attention,torch,full,memory,MB,L,sequence length,256,12.19287109375,12.19287109375,12.19287109375,"{""B"": 2, ""C_in"": 4, ""C_out"": 4, ""K"": 3, ""groups"": 1, ""bias"": true, ""dtype"": ""torch.bfloat16""}",NVIDIA GeForce RTX 3090,2025-04-28 04:46:15,0.1.1
 multi_token_attention,torch,full,memory,MB,L,sequence length,512,45.47412109375,45.47412109375,45.47412109375,"{""B"": 2, ""C_in"": 4, ""C_out"": 4, ""K"": 3, ""groups"": 1, ""bias"": true, ""dtype"": ""torch.bfloat16""}",NVIDIA GeForce RTX 3090,2025-04-28 04:46:15,0.1.1
 multi_token_attention,torch,full,memory,MB,L,sequence length,1024,178.97412109375,178.97412109375,178.97412109375,"{""B"": 2, ""C_in"": 4, ""C_out"": 4, ""K"": 3, ""groups"": 1, ""bias"": true, ""dtype"": ""torch.bfloat16""}",NVIDIA GeForce RTX 3090,2025-04-28 04:46:15,0.1.1
+softmax,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+softmax,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 softmax,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 softmax,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 softmax,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
@@ -1057,6 +1099,8 @@ softmax,torch,full,memory,MB,N,hidden size,512,0.005859375,0.005859375,0.0058593
 softmax,torch,full,memory,MB,N,hidden size,1024,0.01171875,0.01171875,0.01171875,"{""M"": 2048, ""dtype"": ""torch.bfloat16""}",NVIDIA GeForce RTX 3090,2025-04-30 16:11:26,0.5.8
 softmax,torch,full,memory,MB,N,hidden size,2048,0.0234375,0.0234375,0.0234375,"{""M"": 2048, ""dtype"": ""torch.bfloat16""}",NVIDIA GeForce RTX 3090,2025-04-30 16:11:26,0.5.8
 softmax,torch,full,memory,MB,N,hidden size,4096,0.046875,0.046875,0.046875,"{""M"": 2048, ""dtype"": ""torch.bfloat16""}",NVIDIA GeForce RTX 3090,2025-04-30 16:11:26,0.5.8
+sparse_multi_token_attention,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+sparse_multi_token_attention,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 sparse_multi_token_attention,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 sparse_multi_token_attention,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
 sparse_multi_token_attention,,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1.0,-1.0,-1.0,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
