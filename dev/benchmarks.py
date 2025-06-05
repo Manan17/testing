@@ -7,7 +7,7 @@ GITHUB_USERNAME = "Manan17"
 REPO_NAME = "testing"
 BRANCH_NAME = "gh-pages"
 CSV_PATH = "data/all_benchmark_data.csv"
-GITHUB_TOKEN = "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"
+GITHUB_TOKEN = "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"
 CLONE_DIR = "repo_clone"
 
 if os.path.exists(CLONE_DIR):
