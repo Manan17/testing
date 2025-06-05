@@ -26,5 +26,5 @@ jobs:
         python -m pip install --upgrade pip
     - name: Run update data script
       run: |
-        python benchmarks.py
+        python dev.benchmarks.py
     
