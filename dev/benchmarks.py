@@ -81,6 +81,8 @@ for _, row in df.iterrows():
 # Write updated DataFrame
 updated_df = pd.DataFrame(new_rows)
 updated_df.to_csv(csv_full_path, index=False)
+subprocess.run(["git", "-C", CLONE_DIR, "config", "user.email", "shahmanan170602@gmail.com"], check=True)
+subprocess.run(["git", "-C", CLONE_DIR, "config", "user.name", "Manan17"], check=True)
 subprocess.run(["git", "-C", CLONE_DIR, "add", CSV_PATH])
 subprocess.run(["git", "-C", CLONE_DIR, "commit", "-m", "Add dummy metadata rows per kernel_name"])
 subprocess.run(["git", "-C", CLONE_DIR, "push", "origin", BRANCH_NAME])
