@@ -1,7 +1,24 @@
+import os
+import subprocess
 import pandas as pd
 
-url = "https://raw.githubusercontent.com/Manan17/testing/refs/heads/main/data/all_benchmark_data.csv"
-df = pd.read_csv(url)
+# --- Configuration ---
+GITHUB_USERNAME = "Manan17"
+REPO_NAME = "testing"
+BRANCH_NAME = "gh-pages"
+CSV_PATH = "data/all_benchmark_data.csv"
+GITHUB_TOKEN = "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"
+CLONE_DIR = "repo_clone"
+
+if os.path.exists(CLONE_DIR):
+    subprocess.run(["rm", "-rf", CLONE_DIR])
+
+repo_url = f"https://{GITHUB_USERNAME}:{GITHUB_TOKEN}@github.com/{GITHUB_USERNAME}/{REPO_NAME}.git"
+subprocess.run(["git", "clone", "--branch", BRANCH_NAME, repo_url, CLONE_DIR], check=True)
+
+# --- Load the CSV from the repo ---
+csv_full_path = os.path.join(CLONE_DIR, CSV_PATH)
+df = pd.read_csv(csv_full_path)
 
 kernel_names = df['kernel_name'].unique().tolist()
 
@@ -63,4 +80,7 @@ for _, row in df.iterrows():
 
 # Write updated DataFrame
 updated_df = pd.DataFrame(new_rows)
-updated_df.head()
+updated_df.to_csv(csv_full_path, index=False)
+subprocess.run(["git", "-C", CLONE_DIR, "add", CSV_PATH])
+subprocess.run(["git", "-C", CLONE_DIR, "commit", "-m", "Add dummy metadata rows per kernel_name"])
+subprocess.run(["git", "-C", CLONE_DIR, "push", "origin", BRANCH_NAME])
