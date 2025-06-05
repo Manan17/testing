@@ -47,7 +47,7 @@ for kernel in kernel_names:
         "liger_version": "0.0.0"
     })
 
-# --- Delete old file if it exists ---
+
 if os.path.exists(CSV_PATH):
     os.remove(CSV_PATH)
 
