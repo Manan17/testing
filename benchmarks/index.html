@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Benchmark Visualization</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Kernel Benchmark Visualizer</h1>
+    <div class="controls">
+      <label for="commit">Commit Hash:</label>
+      <select id="commit"></select>
+
+      <label for="kernel">Kernel Name:</label>
+      <select id="kernel"></select>
+
+      <label for="metric">Metric:</label>
+      <select id="metric"></select>
+
+      <label for="mode">Pass Type:</label>
+      <select id="mode"></select>
+    </div>
+    <canvas id="benchmarkChart"></canvas>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
