@@ -26,13 +26,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function fetchCommitHashes() {
   try {
     const response = await fetch(
-      "https://raw.githubusercontent.com/Manan17/testing/refs/heads/gh-pages/benchmarks/commits.json"
+      "https://raw.githubusercontent.com/Manan17/testing/refs/heads/gh-pages/benchmarks/commits.txt"
     );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const data = await response.json();
-    return data.commits;
+    const text = await response.text();
+    // Split by newlines and filter out empty lines
+    return text.split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0);
   } catch (err) {
     console.error("Failed to fetch commit hashes:", err);
     return [];
