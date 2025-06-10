@@ -1,0 +1,9 @@
+kernel_name,kernel_provider,kernel_operation_mode,metric_name,metric_unit,x_name,x_label,x_value,y_value_50,y_value_20,y_value_80,extra_benchmark_config_str,gpu_name,timestamp,liger_version
+cross_entropy,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1,-1,-1,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+cross_entropy,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1,-1,-1,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+layer_norm,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1,-1,-1,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+layer_norm,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1,-1,-1,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+softmax,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1,-1,-1,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+softmax,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1,-1,-1,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+matmul,liger,dummy_mode,speed,ms,batch_size,Batch Size,-1,-1,-1,-1,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
+matmul,huggingface,dummy_mode,,ms,batch_size,Batch Size,-1,-1,-1,-1,dummy_config,dummy_gpu,2025-01-01 00:00:00,0.0.0
