@@ -15,7 +15,7 @@ jobs:
       OUTPUT_FILENAME: benchmark.csv
       BENCHMARK_SCRIPT: dev/benchmarks.py
       GENERATED_CSV: data/all_benchmark_data.csv
-      COMMIT_JSON: commit.json
+      COMMIT_JSON: benchmarks/commits.json
     steps:
       # Step 1: Checkout the main branch
       - name: Checkout main
