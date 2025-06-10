@@ -4,8 +4,8 @@ let chart2Speed;
 let chart2Memory;
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // const commits = await fetchCommitHashes();
-  const commits = ["a96bdc1", "bc105fd", "cbe66ed"]
+  const commits = await fetchCommitHashes();
+  // const commits = ["a96bdc1", "bc105fd", "cbe66ed"]
   populateCommitDropdown(commits, "commit");
   populateCommitDropdown(commits, "commit2");
 
@@ -26,16 +26,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function fetchCommitHashes() {
   try {
     const response = await fetch(
-      "https://api.github.com/repos/Manan17/testing/contents/benchmarks?ref=gh-pages"
+      "https://raw.githubusercontent.com/Manan17/testing/refs/heads/gh-pages/benchmarks/commits.json"
     );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    if (!Array.isArray(data)) {
-      throw new Error('Expected array response from GitHub API');
-    }
-    return data.filter(item => item.type === "dir").map(dir => dir.name);
+    return data.commits;
   } catch (err) {
     console.error("Failed to fetch commit hashes:", err);
     return [];
