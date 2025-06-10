@@ -15,7 +15,7 @@ jobs:
       OUTPUT_FILENAME: benchmark.csv
       BENCHMARK_SCRIPT: dev/benchmarks.py
       GENERATED_CSV: data/all_benchmark_data.csv
-      COMMIT_JSON: commits.json
+      COMMIT_JSON: commit.json
     steps:
       # Step 1: Checkout the main branch
       - name: Checkout main
@@ -57,26 +57,15 @@ jobs:
           mkdir -p gh-pages/${OUTPUT_DIR}/${{ steps.get_hash.outputs.hash }}
           cp ${GENERATED_CSV} gh-pages/${OUTPUT_DIR}/${{ steps.get_hash.outputs.hash }}/${OUTPUT_FILENAME}
       
-      # Step 7: Update commits.json with new commit hash
-      - name: Update commits.json
+      # Step 7: Update commit.json with new commit hash
+      - name: Update commit.json
         run: |
           cd gh-pages
           
-          # Create commits.json if it doesn't exist
+          # Create commit.json if it doesn't exist
           if [ ! -f ${COMMIT_JSON} ]; then
             echo '{"commits": []}' > ${COMMIT_JSON}
           fi
-          
-          # Create new commit entry
-          NEW_COMMIT=$(cat <<EOF
-          {
-            "hash": "${{ steps.get_hash.outputs.hash }}",
-            "full_hash": "${{ steps.get_hash.outputs.full_hash }}",
-            "timestamp": "${{ steps.get_hash.outputs.timestamp }}",
-            "benchmark_path": "${OUTPUT_DIR}/${{ steps.get_hash.outputs.hash }}/${OUTPUT_FILENAME}"
-          }
-          EOF
-          )
           
           # Use Python to properly append to JSON array
           python3 << 'PYTHON_SCRIPT'
@@ -87,21 +76,14 @@ jobs:
           with open(os.environ['COMMIT_JSON'], 'r') as f:
               data = json.load(f)
           
-          # Create new commit entry
-          new_commit = {
-              "hash": "${{ steps.get_hash.outputs.hash }}",
-              "full_hash": "${{ steps.get_hash.outputs.full_hash }}",
-              "timestamp": "${{ steps.get_hash.outputs.timestamp }}",
-              "benchmark_path": f"{os.environ['OUTPUT_DIR']}/${{ steps.get_hash.outputs.hash }}/{os.environ['OUTPUT_FILENAME']}"
-          }
+          # Get the new commit hash
+          new_hash = "${{ steps.get_hash.outputs.hash }}"
           
-          # Append new commit to the array
-          data['commits'].append(new_commit)
+          # Filter out any non-string entries and append new hash
+          data['commits'] = [commit for commit in data['commits'] if isinstance(commit, str)]
+          data['commits'].append(new_hash)
           
-          # Keep only the last 50 commits to prevent the file from growing too large
-          data['commits'] = data['commits'][-50:]
-          
-          # Write back to file
+          # Write back to file with proper formatting
           with open(os.environ['COMMIT_JSON'], 'w') as f:
               json.dump(data, f, indent=2)
           PYTHON_SCRIPT
