@@ -67,20 +67,20 @@ jobs:
 
           if [ -f "$COMMIT_FILE" ]; then
             echo "commit.json exists, updating..."
-            python3 - <<EOF
-              import json
-              f = "${COMMIT_FILE}"
-              h = "${COMMIT_HASH}"
-              with open(f, "r") as file:
-                  d = json.load(file)
-              if h not in d.get("commits", []):
-                  d["commits"].append(h)
-              with open(f, "w") as file:
-                  json.dump(d, file, indent=2)
-            EOF
+            python3 -c "
+import json
+f = '$COMMIT_FILE'
+h = '$COMMIT_HASH'
+with open(f, 'r') as file:
+    data = json.load(file)
+if h not in data.get('commits', []):
+    data['commits'].append(h)
+with open(f, 'w') as file:
+    json.dump(data, file, indent=2)
+"
           else
             echo "commit.json does not exist, creating..."
-            echo '{ "commits": ["'"$COMMIT_HASH"'"] }' > "$COMMIT_FILE"
+            echo '{ \"commits\": [\"'"$COMMIT_HASH"'\" ] }' > "$COMMIT_FILE"
           fi
 
       # Step 8: Commit and push all changes
