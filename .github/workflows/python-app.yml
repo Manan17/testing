@@ -59,7 +59,7 @@ jobs:
           mkdir -p gh-pages/${OUTPUT_DIR}/${{ steps.get_hash.outputs.hash }}
           cp ${GENERATED_CSV} gh-pages/${OUTPUT_DIR}/${{ steps.get_hash.outputs.hash }}/${OUTPUT_FILENAME}
 
-        - name: Update commit.json
+      - name: Update commit.json
         run: |
           cd gh-pages
           COMMIT_FILE="${{ env.COMMIT_JSON }}"
