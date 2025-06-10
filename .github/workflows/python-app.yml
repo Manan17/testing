@@ -1,16 +1,12 @@
 name: Push Benchmark to gh-pages
-
 on:
   push:
     branches: [ "main" ]
-
 permissions:
   contents: write
-
 jobs:
   publish-benchmark:
     runs-on: ubuntu-latest
-
     env:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
       GITHUB_USERNAME: Manan17
@@ -20,70 +16,97 @@ jobs:
       BENCHMARK_SCRIPT: dev/benchmarks.py
       GENERATED_CSV: data/all_benchmark_data.csv
       COMMIT_JSON: commits.json
-
     steps:
-      # Step 1: Checkout main branch
+      # Step 1: Checkout the main branch
       - name: Checkout main
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
-
-      # Step 2: Get the current commit hash
-      - name: Get commit hash
+      
+      # Step 2: Get the current commit hash and timestamp
+      - name: Get commit hash and timestamp
         id: get_hash
-        run: echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
+        run: |
+          echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "full_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "timestamp=$(date -u '+%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+      
       # Step 3: Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-
-      # Step 4: Install dependencies and run benchmark script
+      
+      # Step 4: Install dependencies & run script
       - name: Install dependencies and run benchmarks.py
         run: |
           python -m pip install --upgrade pip pandas
           python $BENCHMARK_SCRIPT
-
-      # Step 5: Checkout gh-pages branch into a subfolder
+      
+      # Step 5: Checkout gh-pages branch in a subfolder
       - name: Checkout gh-pages
         uses: actions/checkout@v4
         with:
           ref: gh-pages
           path: gh-pages
           token: ${{ secrets.GH_TOKEN }}
-
-      # Step 6: Copy benchmark to gh-pages
+      
+      # Step 6: Copy benchmark CSV to gh-pages directory
       - name: Copy generated benchmark to gh-pages
         run: |
           mkdir -p gh-pages/${OUTPUT_DIR}/${{ steps.get_hash.outputs.hash }}
           cp ${GENERATED_CSV} gh-pages/${OUTPUT_DIR}/${{ steps.get_hash.outputs.hash }}/${OUTPUT_FILENAME}
-
-      - name: Update commit.json
+      
+      # Step 7: Update commits.json with new commit hash
+      - name: Update commits.json
         run: |
           cd gh-pages
-          COMMIT_FILE="${{ env.COMMIT_JSON }}"
-          COMMIT_HASH="${{ steps.get_hash.outputs.hash }}"
-
-          if [ -f "$COMMIT_FILE" ]; then
-            echo "commit.json exists, updating..."
-            python3 -c "
-import json
-f = '$COMMIT_FILE'
-h = '$COMMIT_HASH'
-with open(f, 'r') as file:
-    data = json.load(file)
-if h not in data.get('commits', []):
-    data['commits'].append(h)
-with open(f, 'w') as file:
-    json.dump(data, file, indent=2)
-"
-          else
-            echo "commit.json does not exist, creating..."
-            echo '{ \"commits\": [\"'"$COMMIT_HASH"'\" ] }' > "$COMMIT_FILE"
+          
+          # Create commits.json if it doesn't exist
+          if [ ! -f ${COMMIT_JSON} ]; then
+            echo '{"commits": []}' > ${COMMIT_JSON}
           fi
-
-      # Step 8: Commit and push all changes
+          
+          # Create new commit entry
+          NEW_COMMIT=$(cat <<EOF
+          {
+            "hash": "${{ steps.get_hash.outputs.hash }}",
+            "full_hash": "${{ steps.get_hash.outputs.full_hash }}",
+            "timestamp": "${{ steps.get_hash.outputs.timestamp }}",
+            "benchmark_path": "${OUTPUT_DIR}/${{ steps.get_hash.outputs.hash }}/${OUTPUT_FILENAME}"
+          }
+          EOF
+          )
+          
+          # Use Python to properly append to JSON array
+          python3 << 'PYTHON_SCRIPT'
+          import json
+          import os
+          
+          # Read existing JSON
+          with open(os.environ['COMMIT_JSON'], 'r') as f:
+              data = json.load(f)
+          
+          # Create new commit entry
+          new_commit = {
+              "hash": "${{ steps.get_hash.outputs.hash }}",
+              "full_hash": "${{ steps.get_hash.outputs.full_hash }}",
+              "timestamp": "${{ steps.get_hash.outputs.timestamp }}",
+              "benchmark_path": f"{os.environ['OUTPUT_DIR']}/${{ steps.get_hash.outputs.hash }}/{os.environ['OUTPUT_FILENAME']}"
+          }
+          
+          # Append new commit to the array
+          data['commits'].append(new_commit)
+          
+          # Keep only the last 50 commits to prevent the file from growing too large
+          data['commits'] = data['commits'][-50:]
+          
+          # Write back to file
+          with open(os.environ['COMMIT_JSON'], 'w') as f:
+              json.dump(data, f, indent=2)
+          PYTHON_SCRIPT
+      
+      # Step 8: Commit and push
       - name: Commit and push to gh-pages
         run: |
           cd gh-pages
