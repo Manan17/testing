@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   benchmarks:
-    if: ${{ github.event_name != 'push' }}
+    if: False
     runs-on: ubuntu-latest
     env:
       GITHUB_USERNAME: Manan17
