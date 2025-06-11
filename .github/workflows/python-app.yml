@@ -9,11 +9,11 @@ permissions:
   contents: write
 
 env:
-  ENABLE_DEPLOY: false  
+  ENABLE_DEPLOY: false
 
 jobs:
   benchmarks:
-    if: ${{ env.ENABLE_DEPLOY == 'true' }}
+    if: ${{ github.event_name == 'push' && env.ENABLE_DEPLOY == 'true' }}
     runs-on: ubuntu-latest
     env:
       GITHUB_USERNAME: Manan17
