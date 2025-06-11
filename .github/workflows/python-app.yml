@@ -1,63 +1,65 @@
-name: Push Benchmark to gh-pages
+name: Benchmarks
+
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+
 permissions:
   contents: write
+  
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+  
 jobs:
   benchmarks:
     runs-on: ubuntu-latest
     env:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
       GITHUB_USERNAME: Manan17
       REPO_NAME: testing
       OUTPUT_DIR: benchmarks
       OUTPUT_FILENAME: benchmark.csv
-      BENCHMARK_SCRIPT: dev/benchmarks.py
       GENERATED_CSV: data/all_benchmark_data.csv
-      COMMIT_JSON: benchmarks/commits.json
+
     steps:
-      # Step 1: Checkout the main branch
-      - name: Checkout main
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-      
-      # Step 2: Get the current commit hash and timestamp
-      - name: Get commit hash and timestamp
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get commit hash
         id: get_hash
-        run: |
-          echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-          echo "full_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-          echo "timestamp=$(date -u '+%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
-      
-      # Step 3: Set up Python
+        run: echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v3
         with:
-          python-version: "3.10"
-      
-      # Step 4: Install dependencies & run script
-      - name: Install dependencies and run benchmarks.py
+          python-version: '3.10'
+
+      - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip pandas
-          python $BENCHMARK_SCRIPT
-      
-      # Step 5: Checkout gh-pages branch in a subfolder
+          python -m pip install --upgrade pip
+          pip install modal
+          pip install pandas
+
+      - name: Remove previous benchmark data
+        run: |
+          rm -f data/all_benchmark_data.csv
+
+      - name: Run benchmarks on GPU
+        run: |
+          python dev/benchmarks.py
+        
       - name: Checkout gh-pages
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
           ref: gh-pages
           path: gh-pages
-          token: ${{ secrets.GH_TOKEN }}
       
-      # Step 6: Copy benchmark CSV to gh-pages directory
       - name: Copy generated benchmark to gh-pages
         run: |
           mkdir -p gh-pages/${OUTPUT_DIR}/${{ steps.get_hash.outputs.hash }}
           cp ${GENERATED_CSV} gh-pages/${OUTPUT_DIR}/${{ steps.get_hash.outputs.hash }}/${OUTPUT_FILENAME}
-      
-      # Step 7: Append commit hash to commits.txt if not already present
+
       - name: Update commits.txt
         run: |
           cd gh-pages
@@ -71,13 +73,13 @@ jobs:
           if ! grep -q "${{ steps.get_hash.outputs.hash }}" ${OUTPUT_DIR}/commits.txt; then
             echo "${{ steps.get_hash.outputs.hash }}" >> ${OUTPUT_DIR}/commits.txt
           fi
-      
-      # Step 8: Commit and push
+
       - name: Commit and push to gh-pages
         run: |
           cd gh-pages
-          git config user.name "GitHub Action Bot"
-          git config user.email "action@github.com"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add .
           git commit -m "Add benchmark for commit ${{ steps.get_hash.outputs.hash }}" || echo "No changes to commit"
           git push origin gh-pages
+
