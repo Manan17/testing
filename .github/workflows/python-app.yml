@@ -8,12 +8,9 @@ on:
 permissions:
   contents: write
 
-env:
-  ENABLE_DEPLOY: false
-
 jobs:
   benchmarks:
-    if: ${{ github.event_name == 'push' && env.ENABLE_DEPLOY == 'true' }}
+    if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     env:
       GITHUB_USERNAME: Manan17
