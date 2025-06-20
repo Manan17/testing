@@ -2,39 +2,311 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Liger Performance Over Commits</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <title>Liger Benchmark Dashboard</title>
+  <style>
+    :root {
+      --primary-color: #4CAF50;
+      --danger-color: #f44336;
+      --success-color: #4caf50;
+      --font-color: #333;
+      --bg-color: #ffffff;
+      --secondary-color: #f2f2f2;
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #4CAF50;
+      --danger-color: #e57373;
+      --success-color: #81c784;
+      --font-color: #f1f1f1;
+      --bg-color: #1e1e1e;
+      --secondary-color: #2c2c2c;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: var(--bg-color);
+      color: var(--font-color);
+      text-align: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      display: inline-block;
+      text-align: left;
+      max-width: 95%;
+      background-color: var(--bg-color);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s;
+    }
+
+    h1, h2 {
+      color: var(--primary-color);
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 10px;
+      background-color: var(--bg-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 12px 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: var(--secondary-color);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    td.green {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    td.red {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .selectors {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .selectors label {
+      margin: 0 10px;
+    }
+
+    #kernelSearch {
+      padding: 8px;
+      margin: 10px 0;
+      width: 300px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 8px 16px;
+      background-color: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #388e3c;
+    }
+
+    .scroll-container {
+      overflow-x: auto;
+      margin-bottom: 40px;
+    }
+
+    .theme-toggle {
+      float: right;
+      margin-bottom: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      background: none;
+      border: none;
+      color: var(--font-color);
+      font-size: 20px;
+      padding: 8px;
+      border-radius: 50%;
+      transition: background-color 0.3s;
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--secondary-color);
+    }
+  </style>
 </head>
-<body>
+<body data-theme="light">
   <div class="container">
-    <h1>Liger Performance Over Commits</h1>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">☀️</button>
+    <button class="theme-toggle" onclick="goToDetailedView()">Detailed View</button>
+    <h1>Liger Kernel Benchmark Comparison</h1>
 
-    <!-- Detailed page navigation -->
-    <div class="navigation-controls">
-      <button id="detailedPageButton">View Detailed</button>
+    <div class="selectors">
+      <label>
+        Show last N commits:
+        <select id="commitCount">
+          <option value="5">5</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+          <option value="all">All</option>
+        </select>
+      </label>
+      <label>
+        Metric type:
+        <select id="metricType">
+          <option value="forward">forward</option>
+          <option value="backward">backward</option>
+          <option value="full">full</option>
+        </select>
+      </label>
+      <input type="text" id="kernelSearch" placeholder="Search kernel name..." onkeyup="renderTables()">
+      <button onclick="loadData()">Update Table</button>
     </div>
 
-    <!-- Pagination controls -->
-    <div class="pagination-controls">
-      <button id="prevPage">Previous</button>
-      <span id="pageInfo"></span>
-      <button id="nextPage">Next</button>
+    <h2>Memory</h2>
+    <div class="scroll-container">
+      <table id="memoryTable"></table>
     </div>
 
-    <div class="chart-section">
-      <h2>Memory Performance (Lower is Better)</h2>
-      <canvas id="memoryHistoryChart"></canvas>
-    </div>
-
-    <div class="chart-section">
-      <h2>Speed Performance (Lower is Better)</h2>
-      <canvas id="speedHistoryChart"></canvas>
+    <h2>Speed</h2>
+    <div class="scroll-container">
+      <table id="speedTable"></table>
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const referenceCommit = 'c1bdc24';
+    const benchmarkBase = 'https://raw.githubusercontent.com/linkedin/Liger-Kernel/refs/heads/gh-pages/benchmarks';
+
+    let allCommits = [];
+    let allDataByCommit = {};
+    let kernelMeta = {};
+
+    function toggleTheme() {
+      const body = document.body;
+      const themeButton = document.querySelector('.theme-toggle');
+      const isDark = body.getAttribute('data-theme') === 'dark';
+      body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      themeButton.textContent = isDark ? '☀️' : '🌙';
+    }
+
+    function goToDetailedView() {
+        const baseUrl = window.location.href.endsWith('/') ? window.location.href : window.location.href + '/';
+        window.location.href = baseUrl + 'detailed';
+    }
+
+    async function fetchCommits() {
+      const res = await fetch(`${benchmarkBase}/commits.txt`);
+      const text = await res.text();
+      return text.trim().split('\n');
+    }
+
+    async function fetchCSV(commit) {
+      const res = await fetch(`${benchmarkBase}/${commit}/benchmark.csv`);
+      if (!res.ok) return null;
+      const text = await res.text();
+      const rows = text.trim().split('\n');
+      const headers = rows[0].split(',');
+      const data = {};
+
+      for (let i = 1; i < rows.length; i++) {
+        const cols = rows[i].split(',');
+        const row = Object.fromEntries(headers.map((h, idx) => [h.trim(), cols[idx]?.trim()]));
+        if (row.kernel_provider !== 'liger') continue;
+
+        const baseKey = `${row.kernel_name}_${row.kernel_operation_mode}_${row.metric_name}`;
+        const kernelKey = `${baseKey}`;
+
+        if (!data[kernelKey]) {
+          data[kernelKey] = parseFloat(row.y_value_50);
+          if (!kernelMeta[kernelKey]) {
+            kernelMeta[kernelKey] = {
+              x_label: row.x_label,
+              x_value: row.x_value
+            };
+          }
+        }
+      }
+      return data;
+    }
+
+    async function loadData() {
+      document.getElementById('speedTable').innerHTML = 'Loading...';
+      document.getElementById('memoryTable').innerHTML = 'Loading...';
+
+      const count = document.getElementById('commitCount').value;
+      allCommits = await fetchCommits();
+      const selectedCommits = count === 'all' ? allCommits : allCommits.slice(-parseInt(count));
+
+      allDataByCommit = {};
+      kernelMeta = {};
+
+      await Promise.all(selectedCommits.map(async (commit) => {
+        const data = await fetchCSV(commit);
+        if (data) allDataByCommit[commit] = data;
+      }));
+
+      renderTables();
+    }
+
+    function compareMetric(current, reference) {
+      if (current == null || reference == null) return '';
+      const delta = (current - reference) / reference;
+      if (delta > 0.10) return 'red';
+      if (delta < 0) return 'green';
+      return '';
+    }
+
+    function renderTables() {
+      const metricType = document.getElementById('metricType').value;
+      const searchQuery = document.getElementById('kernelSearch').value.toLowerCase();
+      const speedTable = document.getElementById('speedTable');
+      const memoryTable = document.getElementById('memoryTable');
+
+      speedTable.innerHTML = '';
+      memoryTable.innerHTML = '';
+
+      const commits = Object.keys(allDataByCommit);
+      const reference = allDataByCommit[referenceCommit];
+
+      function createTable(table, filterMetric) {
+        let header = '<tr><th>Kernel</th><th>X</th><th>Reference</th>';
+        for (const commit of commits) {
+          if (commit === referenceCommit) continue;
+          header += `<th>${commit}</th>`;
+        }
+        header += '</tr>';
+        table.innerHTML += header;
+
+        const allKeys = new Set();
+        for (const commit of commits) {
+          for (const k in allDataByCommit[commit]) {
+            if (k.includes(`_${metricType}_${filterMetric}`)) allKeys.add(k);
+          }
+        }
+
+        [...allKeys].forEach(kernelKey => {
+          if (searchQuery && !kernelKey.toLowerCase().includes(searchQuery)) return;
+          const refVal = reference?.[kernelKey];
+          const meta = kernelMeta[kernelKey] || { x_label: '?', x_value: '?' };
+
+          let row = `<tr><td>${kernelKey}</td><td>${meta.x_label}=${meta.x_value}</td><td>${refVal != null ? refVal.toFixed(2) : 'N/A'}</td>`;
+          for (const commit of commits) {
+            if (commit === referenceCommit) continue;
+            const val = allDataByCommit[commit]?.[kernelKey];
+            const cls = compareMetric(val, refVal);
+            row += `<td class="${cls}">${val != null ? val.toFixed(2) : 'N/A'}</td>`;
+          }
+          row += '</tr>';
+          table.innerHTML += row;
+        });
+      }
+
+      createTable(memoryTable, 'memory');
+      createTable(speedTable, 'speed');
+    }
+
+    window.onload = loadData;
+  </script>
 </body>
 </html>

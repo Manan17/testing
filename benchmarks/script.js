@@ -1,148 +1,91 @@
-let allCommitData = [];
-let currentPage = 1;
-const commitsPerPage = 8;
-document.getElementById('detailedPageButton').addEventListener('click', () => {
-    const baseUrl = window.location.href.endsWith('/') ? window.location.href : window.location.href + '/';
-    window.location.href = baseUrl + 'detailed';
-  });
-  
-  
 document.addEventListener("DOMContentLoaded", () => {
-  fetch('https://raw.githubusercontent.com/linkedin/Liger-Kernel/gh-pages/benchmarks/commits.txt')
-    .then(response => response.text())
-    .then(text => {
-      const commitHashes = text.trim().split('\n');
-      loadAllBenchmarks(commitHashes);
-    });
-
-  document.getElementById('prevPage').addEventListener('click', () => changePage(-1));
-  document.getElementById('nextPage').addEventListener('click', () => changePage(1));
-});
-
-async function loadAllBenchmarks(commitHashes) {
-  for (const commit of commitHashes) {
-    if (commit === "b6ed735"){
-        continue;
-    }
-    const csvUrl = `https://raw.githubusercontent.com/linkedin/Liger-Kernel/gh-pages/benchmarks/${commit}/benchmark.csv`;
-
-    try {
-      const result = await fetchCsv(csvUrl);
-      const data = result.data.filter(d => d.kernel_provider && d.metric_name && d.y_value_50 != null);
-
-      const speedData = data.filter(d => d.metric_name === 'speed');
-      const memoryData = data.filter(d => d.metric_name === 'memory');
-
-      const ligerSpeed = average(speedData.filter(d => d.kernel_provider === 'liger'));
-      const othersSpeed = average(speedData.filter(d => d.kernel_provider !== 'liger'));
-
-      const ligerMemory = average(memoryData.filter(d => d.kernel_provider === 'liger'));
-      const othersMemory = average(memoryData.filter(d => d.kernel_provider !== 'liger'));
-
-      allCommitData.push({
-        commit,
-        ligerSpeed,
-        othersSpeed,
-        ligerMemory,
-        othersMemory
+    fetch('https://raw.githubusercontent.com/linkedin/Liger-Kernel/gh-pages/benchmarks/commits.txt')
+      .then(response => response.text())
+      .then(text => {
+        const commitHashes = text.trim().split('\n');
+        loadDetailedTable(commitHashes);
       });
-    } catch (error) {
-      console.error(`Failed to load ${csvUrl}`, error);
-    }
-    
-  }
-
-  renderCurrentPage();
-}
-
-function fetchCsv(url) {
-  return new Promise((resolve, reject) => {
-    Papa.parse(url, {
-      download: true,
-      header: true,
-      dynamicTyping: true,
-      complete: results => resolve(results),
-      error: err => reject(err)
-    });
   });
-}
-
-function average(data) {
-  if (data.length === 0) return null;
-  return data.reduce((sum, d) => sum + d.y_value_50, 0) / data.length;
-}
-
-function renderCurrentPage() {
-  const totalPages = Math.ceil(allCommitData.length / commitsPerPage);
-  const startIdx = (currentPage - 1) * commitsPerPage;
-  const endIdx = startIdx + commitsPerPage;
-  const currentData = allCommitData.slice(startIdx, endIdx);
-
-  document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
-
-  const commits = currentData.map(d => d.commit.slice(0, 7));
-
-  const ligerSpeeds = currentData.map(d => d.ligerSpeed);
-  const othersSpeeds = currentData.map(d => d.othersSpeed);
-
-  const ligerMemories = currentData.map(d => d.ligerMemory);
-  const othersMemories = currentData.map(d => d.othersMemory);
-
-  renderGroupedBarChart('Memory Performance (Lower is Better in MB)', 'memoryHistoryChart', commits, ligerMemories, othersMemories);
-  renderGroupedBarChart('Speed Performance (Lower is Better in ms)', 'speedHistoryChart', commits, ligerSpeeds, othersSpeeds);
-}
-
-let memoryChart, speedChart;
-
-function renderGroupedBarChart(title, canvasId, labels, ligerData, othersData) {
-  const ctx = document.getElementById(canvasId).getContext('2d');
-
-  if (canvasId === 'memoryHistoryChart' && memoryChart) {
-    memoryChart.destroy();
-  }
-  if (canvasId === 'speedHistoryChart' && speedChart) {
-    speedChart.destroy();
-  }
-
-  const chart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: 'Liger',
-          data: ligerData,
-          backgroundColor: 'orange'
-        },
-        {
-          label: 'Others',
-          data: othersData,
-          backgroundColor: 'steelblue'
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        title: { display: true, text: title }
-      },
-      scales: {
-        y: { beginAtZero: true },
-        x: { ticks: { maxRotation: 0, minRotation: 0, autoSkip: false } }
+  
+  async function loadDetailedTable(commitHashes) {
+    const tableData = [];
+  
+    for (const commit of commitHashes) {
+      const csvUrl = `https://raw.githubusercontent.com/linkedin/Liger-Kernel/gh-pages/benchmarks/${commit}/benchmark.csv`;
+  
+      try {
+        const result = await fetchCsv(csvUrl);
+        const data = result.data.filter(d => d.kernel_provider && d.metric_name && d.y_value_50 != null);
+  
+        const ligerRows = data.filter(d => d.kernel_provider === 'liger');
+        const otherRows = data.filter(d => d.kernel_provider !== 'liger');
+  
+        ligerRows.forEach(ligerRow => {
+          const match = otherRows.find(otherRow => (
+            ligerRow.kernel_name === otherRow.kernel_name &&
+            ligerRow.kernel_operation_mode === otherRow.kernel_operation_mode &&
+            ligerRow.extra_benchmark_config_str === otherRow.extra_benchmark_config_str &&
+            ligerRow.gpu_name === otherRow.gpu_name &&
+            ligerRow.metric_name === otherRow.metric_name &&
+            ligerRow.x_value === otherRow.x_value
+          ));
+  
+          if (match) {
+            const absDiff = Math.abs(match.y_value_50 - ligerRow.y_value_50);
+  
+            tableData.push({
+              commit: commit.slice(0, 7),
+              kernelName: ligerRow.kernel_name,
+              operationMode: ligerRow.kernel_operation_mode,
+              metric: ligerRow.metric_name,
+              batchSize: ligerRow.x_value,
+              ligerValue: ligerRow.y_value_50.toFixed(2),
+              otherValue: match.y_value_50.toFixed(2),
+              difference: absDiff.toFixed(2)
+            });
+          }
+        });
+      } catch (error) {
+        console.error(`Failed to load ${csvUrl}`, error);
       }
     }
-  });
-
-  if (canvasId === 'memoryHistoryChart') memoryChart = chart;
-  if (canvasId === 'speedHistoryChart') speedChart = chart;
-}
-
-function changePage(direction) {
-  const totalPages = Math.ceil(allCommitData.length / commitsPerPage);
-  currentPage += direction;
-
-  if (currentPage < 1) currentPage = 1;
-  if (currentPage > totalPages) currentPage = totalPages;
-
-  renderCurrentPage();
-}
+  
+    populateDataTable(tableData);
+  }
+  
+  function fetchCsv(url) {
+    return new Promise((resolve, reject) => {
+      Papa.parse(url, {
+        download: true,
+        header: true,
+        dynamicTyping: true,
+        complete: results => resolve(results),
+        error: err => reject(err)
+      });
+    });
+  }
+  
+  function populateDataTable(data) {
+    const tableBody = document.querySelector('#benchmarkTable tbody');
+    tableBody.innerHTML = '';
+  
+    data.forEach(row => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${row.commit}</td>
+        <td>${row.kernelName}</td>
+        <td>${row.operationMode}</td>
+        <td>${row.metric}</td>
+        <td>${row.batchSize}</td>
+        <td>${row.ligerValue}</td>
+        <td>${row.otherValue}</td>
+        <td>${row.difference}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  
+    $('#benchmarkTable').DataTable({
+      pageLength: 25
+    });
+  }
+  
