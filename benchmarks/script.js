@@ -1,91 +1,133 @@
-document.addEventListener("DOMContentLoaded", () => {
-    fetch('https://raw.githubusercontent.com/linkedin/Liger-Kernel/gh-pages/benchmarks/commits.txt')
-      .then(response => response.text())
-      .then(text => {
-        const commitHashes = text.trim().split('\n');
-        loadDetailedTable(commitHashes);
-      });
-  });
-  
-  async function loadDetailedTable(commitHashes) {
-    const tableData = [];
-  
-    for (const commit of commitHashes) {
-      const csvUrl = `https://raw.githubusercontent.com/linkedin/Liger-Kernel/gh-pages/benchmarks/${commit}/benchmark.csv`;
-  
-      try {
-        const result = await fetchCsv(csvUrl);
-        const data = result.data.filter(d => d.kernel_provider && d.metric_name && d.y_value_50 != null);
-  
-        const ligerRows = data.filter(d => d.kernel_provider === 'liger');
-        const otherRows = data.filter(d => d.kernel_provider !== 'liger');
-  
-        ligerRows.forEach(ligerRow => {
-          const match = otherRows.find(otherRow => (
-            ligerRow.kernel_name === otherRow.kernel_name &&
-            ligerRow.kernel_operation_mode === otherRow.kernel_operation_mode &&
-            ligerRow.extra_benchmark_config_str === otherRow.extra_benchmark_config_str &&
-            ligerRow.gpu_name === otherRow.gpu_name &&
-            ligerRow.metric_name === otherRow.metric_name &&
-            ligerRow.x_value === otherRow.x_value
-          ));
-  
-          if (match) {
-            const absDiff = Math.abs(match.y_value_50 - ligerRow.y_value_50);
-  
-            tableData.push({
-              commit: commit.slice(0, 7),
-              kernelName: ligerRow.kernel_name,
-              operationMode: ligerRow.kernel_operation_mode,
-              metric: ligerRow.metric_name,
-              batchSize: ligerRow.x_value,
-              ligerValue: ligerRow.y_value_50.toFixed(2),
-              otherValue: match.y_value_50.toFixed(2),
-              difference: absDiff.toFixed(2)
-            });
-          }
-        });
-      } catch (error) {
-        console.error(`Failed to load ${csvUrl}`, error);
+const referenceCommit = 'c1bdc24';
+const benchmarkBase = 'https://raw.githubusercontent.com/linkedin/Liger-Kernel/refs/heads/gh-pages/benchmarks';
+
+let allCommits = [];
+let allDataByCommit = {};
+let kernelMeta = {};
+
+function toggleTheme() {
+  const body = document.body;
+  const themeButton = document.querySelector('.theme-toggle');
+  const isDark = body.getAttribute('data-theme') === 'dark';
+  body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  themeButton.textContent = isDark ? '☀️' : '🌙';
+}
+
+function goToDetailedView() {
+    const baseUrl = window.location.href.endsWith('/') ? window.location.href : window.location.href + '/';
+    window.location.href = baseUrl + 'detailed';
+}
+
+async function fetchCommits() {
+  const res = await fetch(`${benchmarkBase}/commits.txt`);
+  const text = await res.text();
+  return text.trim().split('\n');
+}
+
+async function fetchCSV(commit) {
+  const res = await fetch(`${benchmarkBase}/${commit}/benchmark.csv`);
+  if (!res.ok) return null;
+  const text = await res.text();
+  const rows = text.trim().split('\n');
+  const headers = rows[0].split(',');
+  const data = {};
+
+  for (let i = 1; i < rows.length; i++) {
+    const cols = rows[i].split(',');
+    const row = Object.fromEntries(headers.map((h, idx) => [h.trim(), cols[idx]?.trim()]));
+    if (row.kernel_provider !== 'liger') continue;
+
+    const baseKey = `${row.kernel_name}_${row.kernel_operation_mode}_${row.metric_name}`;
+    const kernelKey = `${baseKey}`;
+
+    if (!data[kernelKey]) {
+      data[kernelKey] = parseFloat(row.y_value_50);
+      if (!kernelMeta[kernelKey]) {
+        kernelMeta[kernelKey] = {
+          x_label: row.x_label,
+          x_value: row.x_value
+        };
       }
     }
-  
-    populateDataTable(tableData);
   }
-  
-  function fetchCsv(url) {
-    return new Promise((resolve, reject) => {
-      Papa.parse(url, {
-        download: true,
-        header: true,
-        dynamicTyping: true,
-        complete: results => resolve(results),
-        error: err => reject(err)
-      });
+  return data;
+}
+
+async function loadData() {
+  document.getElementById('speedTable').innerHTML = 'Loading...';
+  document.getElementById('memoryTable').innerHTML = 'Loading...';
+
+  const count = document.getElementById('commitCount').value;
+  allCommits = await fetchCommits();
+  const selectedCommits = count === 'all' ? allCommits : allCommits.slice(-parseInt(count));
+
+  allDataByCommit = {};
+  kernelMeta = {};
+
+  await Promise.all(selectedCommits.map(async (commit) => {
+    const data = await fetchCSV(commit);
+    if (data) allDataByCommit[commit] = data;
+  }));
+
+  renderTables();
+}
+
+function compareMetric(current, reference) {
+  if (current == null || reference == null) return '';
+  const delta = (current - reference) / reference;
+  if (delta > 0.10) return 'red';
+  if (delta < 0) return 'green';
+  return '';
+}
+
+function renderTables() {
+  const metricType = document.getElementById('metricType').value;
+  const searchQuery = document.getElementById('kernelSearch').value.toLowerCase();
+  const speedTable = document.getElementById('speedTable');
+  const memoryTable = document.getElementById('memoryTable');
+
+  speedTable.innerHTML = '';
+  memoryTable.innerHTML = '';
+
+  const commits = Object.keys(allDataByCommit);
+  const reference = allDataByCommit[referenceCommit];
+
+  function createTable(table, filterMetric) {
+    let header = '<tr><th>Kernel</th><th>X</th><th>Reference</th>';
+    for (const commit of commits) {
+      if (commit === referenceCommit) continue;
+      header += `<th>${commit}</th>`;
+    }
+    header += '</tr>';
+    table.innerHTML += header;
+
+    const allKeys = new Set();
+    for (const commit of commits) {
+      for (const k in allDataByCommit[commit]) {
+        if (k.includes(`_${metricType}_${filterMetric}`)) allKeys.add(k);
+      }
+    }
+
+    [...allKeys].forEach(kernelKey => {
+      if (searchQuery && !kernelKey.toLowerCase().includes(searchQuery)) return;
+      const refVal = reference?.[kernelKey];
+      const meta = kernelMeta[kernelKey] || { x_label: '?', x_value: '?' };
+
+      let row = `<tr><td>${kernelKey}</td><td>${meta.x_label}=${meta.x_value}</td><td>${refVal != null ? refVal.toFixed(2) : 'N/A'}</td>`;
+      for (const commit of commits) {
+        if (commit === referenceCommit) continue;
+        const val = allDataByCommit[commit]?.[kernelKey];
+        const cls = compareMetric(val, refVal);
+        row += `<td class="${cls}">${val != null ? val.toFixed(2) : 'N/A'}</td>`;
+      }
+      row += '</tr>';
+      table.innerHTML += row;
     });
   }
-  
-  function populateDataTable(data) {
-    const tableBody = document.querySelector('#benchmarkTable tbody');
-    tableBody.innerHTML = '';
-  
-    data.forEach(row => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${row.commit}</td>
-        <td>${row.kernelName}</td>
-        <td>${row.operationMode}</td>
-        <td>${row.metric}</td>
-        <td>${row.batchSize}</td>
-        <td>${row.ligerValue}</td>
-        <td>${row.otherValue}</td>
-        <td>${row.difference}</td>
-      `;
-      tableBody.appendChild(tr);
-    });
-  
-    $('#benchmarkTable').DataTable({
-      pageLength: 25
-    });
-  }
+
+  createTable(memoryTable, 'memory');
+  createTable(speedTable, 'speed');
+}
+
+window.onload = loadData;
   
