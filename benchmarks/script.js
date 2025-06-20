@@ -1,7 +1,10 @@
 let allCommitData = [];
 let currentPage = 1;
 const commitsPerPage = 8;
-
+document.getElementById('detailedPageButton').addEventListener('click', () => {
+    window.location.href = '/detailed';
+  });
+  
 document.addEventListener("DOMContentLoaded", () => {
   fetch('https://raw.githubusercontent.com/linkedin/Liger-Kernel/gh-pages/benchmarks/commits.txt')
     .then(response => response.text())
