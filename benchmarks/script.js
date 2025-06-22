@@ -169,7 +169,7 @@ function renderTables() {
       
       const tooltipText = formatConfigForTooltip(config);
 
-      let row = `<tr data-tooltip="${tooltipText}" style="cursor: help;">`;
+      let row = `<tr data-tooltip="${tooltipText}" style="cursor: pointer;">`;
       row += `<td>${kernelKey}</td><td>${meta.x_label}=${meta.x_value}</td><td>${refVal != null ? refVal.toFixed(2) : 'N/A'}</td>`;
       for (const commit of commits) {
         if (commit === referenceCommit) continue;
