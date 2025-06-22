@@ -4,6 +4,7 @@ const benchmarkBase = 'https://raw.githubusercontent.com/linkedin/Liger-Kernel/r
 let allCommits = [];
 let allDataByCommit = {};
 let kernelMeta = {};
+let configData = {}; // Store configuration data for tooltips
 
 function toggleTheme() {
   const body = document.body;
@@ -32,8 +33,34 @@ async function fetchCSV(commit) {
   const headers = rows[0].split(',');
   const data = {};
 
+  console.log('Headers:', headers); // Debug headers
+
   for (let i = 1; i < rows.length; i++) {
-    const cols = rows[i].split(',');
+    const rowText = rows[i];
+    const cols = [];
+    let currentCol = '';
+    let inQuotes = false;
+    let quoteChar = '';
+    
+    // Parse CSV row properly handling quoted fields
+    for (let j = 0; j < rowText.length; j++) {
+      const char = rowText[j];
+      
+      if ((char === '"' || char === "'") && !inQuotes) {
+        inQuotes = true;
+        quoteChar = char;
+      } else if (char === quoteChar && inQuotes) {
+        inQuotes = false;
+        quoteChar = '';
+      } else if (char === ',' && !inQuotes) {
+        cols.push(currentCol.trim());
+        currentCol = '';
+      } else {
+        currentCol += char;
+      }
+    }
+    cols.push(currentCol.trim()); // Add the last column
+    
     const row = Object.fromEntries(headers.map((h, idx) => [h.trim(), cols[idx]?.trim()]));
     if (row.kernel_provider !== 'liger') continue;
 
@@ -46,6 +73,19 @@ async function fetchCSV(commit) {
         kernelMeta[kernelKey] = {
           x_label: row.x_label,
           x_value: row.x_value
+        };
+      }
+      // Store configuration data for tooltips
+      if (!configData[kernelKey]) {
+        console.log('Row data for config:', {
+          extra_benchmark_config_str: row.extra_benchmark_config_str,
+          gpu_name: row.gpu_name,
+          liger_version: row.liger_version
+        });
+        configData[kernelKey] = {
+          extra_benchmark_config_str: row.extra_benchmark_config_str || 'N/A',
+          gpu_name: row.gpu_name || 'N/A',
+          liger_version: row.liger_version || 'N/A'
         };
       }
     }
@@ -63,6 +103,7 @@ async function loadData() {
 
   allDataByCommit = {};
   kernelMeta = {};
+  configData = {}; // Reset config data
 
   await Promise.all(selectedCommits.map(async (commit) => {
     const data = await fetchCSV(commit);
@@ -78,6 +119,18 @@ function compareMetric(current, reference) {
   if (delta > 0.10) return 'red';
   if (delta < 0) return 'green';
   return '';
+}
+
+function formatConfigForTooltip(config) {
+  try {
+    const parsed = JSON.parse(config.extra_benchmark_config_str);
+    const configStr = Object.entries(parsed)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join('\n');
+    return `Extra Config:\n${configStr}\n\nGPU: ${config.gpu_name}\nLiger Version: ${config.liger_version}`;
+  } catch (e) {
+    return `Extra Config: ${config.extra_benchmark_config_str}\n\nGPU: ${config.gpu_name}\nLiger Version: ${config.liger_version}`;
+  }
 }
 
 function renderTables() {
@@ -108,12 +161,16 @@ function renderTables() {
       }
     }
 
-    [...allKeys].forEach(kernelKey => {
+    [...allKeys].forEach((kernelKey) => {
       if (searchQuery && !kernelKey.toLowerCase().includes(searchQuery)) return;
       const refVal = reference?.[kernelKey];
       const meta = kernelMeta[kernelKey] || { x_label: '?', x_value: '?' };
+      const config = configData[kernelKey] || { extra_benchmark_config_str: 'N/A', gpu_name: 'N/A', liger_version: 'N/A' };
+      
+      const tooltipText = formatConfigForTooltip(config);
 
-      let row = `<tr><td>${kernelKey}</td><td>${meta.x_label}=${meta.x_value}</td><td>${refVal != null ? refVal.toFixed(2) : 'N/A'}</td>`;
+      let row = `<tr data-tooltip="${tooltipText}" style="cursor: help;">`;
+      row += `<td>${kernelKey}</td><td>${meta.x_label}=${meta.x_value}</td><td>${refVal != null ? refVal.toFixed(2) : 'N/A'}</td>`;
       for (const commit of commits) {
         if (commit === referenceCommit) continue;
         const val = allDataByCommit[commit]?.[kernelKey];
@@ -127,6 +184,76 @@ function renderTables() {
 
   createTable(memoryTable, 'memory');
   createTable(speedTable, 'speed');
+  
+  addTooltipListeners();
+}
+
+let tooltipEl;
+
+function addTooltipListeners() {
+  if (!tooltipEl) {
+    tooltipEl = document.createElement('div');
+    tooltipEl.id = 'custom-tooltip';
+    tooltipEl.className = 'custom-tooltip';
+    document.body.appendChild(tooltipEl);
+  }
+
+  const tooltipRows = document.querySelectorAll('tr[data-tooltip]');
+  
+  tooltipRows.forEach(row => {
+    row.addEventListener('mouseenter', showTooltip);
+    row.addEventListener('mousemove', moveTooltip);
+    row.addEventListener('mouseleave', hideTooltip);
+  });
+}
+
+function showTooltip(event) {
+  tooltipEl.textContent = event.currentTarget.getAttribute('data-tooltip');
+  tooltipEl.style.display = 'block';
+  moveTooltip(event);
+}
+
+function moveTooltip(event) {
+    if (!tooltipEl || tooltipEl.style.display === 'none') return;
+    
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    // Use clientX and clientY which are relative to the viewport for fixed positioning
+    let left = event.clientX + 15;
+    let top = event.clientY + 15;
+
+    const tooltipWidth = tooltipEl.offsetWidth;
+    const tooltipHeight = tooltipEl.offsetHeight;
+
+    // Prevent tooltip from going off the right edge of the viewport
+    if (left + tooltipWidth > viewportWidth) {
+        left = event.clientX - tooltipWidth - 15;
+    }
+
+    // Prevent tooltip from going off the bottom edge of the viewport
+    if (top + tooltipHeight > viewportHeight) {
+        top = event.clientY - tooltipHeight - 15;
+    }
+
+    // Prevent tooltip from going off the left edge
+    if (left < 0) {
+        left = 5;
+    }
+
+    // Prevent tooltip from going off the top edge
+    if (top < 0) {
+        top = 5;
+    }
+
+    tooltipEl.style.left = `${left}px`;
+    tooltipEl.style.top = `${top}px`;
+}
+
+function hideTooltip() {
+  if (tooltipEl) {
+    tooltipEl.style.display = 'none';
+  }
 }
 
 window.onload = loadData;

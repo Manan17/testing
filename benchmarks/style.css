@@ -73,6 +73,26 @@ td.red {
   color: #721c24;
 }
 
+/* Tooltip styles */
+tr[data-tooltip]:hover {
+  background-color: rgba(76, 175, 80, 0.1) !important;
+}
+
+.custom-tooltip {
+  position: fixed;
+  display: none;
+  background-color: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: pre-line;
+  z-index: 10001;
+  max-width: 300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
 .selectors {
   margin-bottom: 20px;
   text-align: center;
